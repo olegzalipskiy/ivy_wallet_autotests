@@ -48,3 +48,11 @@ class OnboardingCurrencyPage(BasePage):
     _CANCEL_SEARCH_BUTTON = _SEARCH_BUTTON
 
 
+class SelectedCurrencyElement(BasePage):
+
+    @staticmethod
+    def generate_selected_currency_locator(currency: str) -> MobileLocator:
+        return MobileLocator(
+            android=(MobileBy.XPATH,
+                     f'//android.widget.TextView[@text="Selected"]/preceding-sibling::android.widget.TextView[@text="{currency}"]')
+        )
