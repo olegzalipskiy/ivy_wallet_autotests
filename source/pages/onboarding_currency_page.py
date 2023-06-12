@@ -58,6 +58,13 @@ class OnboardingCurrencyPage(BasePage):
                      f'//android.widget.TextView[@text="{currency}"]')
         )
 
+    @staticmethod
+    def generate_list_of_currency_locators(currency: str) -> MobileLocator:
+        return MobileLocator(
+            android=(MobileBy.XPATH,
+                     f'//android.widget.TextView[contains(@text,"{currency}")]')
+        )
+
     @allure.step("Title is displayed")
     def check_title_is_displayed(self):
         return self.driver.check.is_element_displayed(by_method_with_selector=self._TITLE())
@@ -129,6 +136,12 @@ class OnboardingCurrencyPage(BasePage):
         else:
             raise Exception("Not correct currency")
 
+    @allure.step("Tap in element in list")
+    def tap_currency_from_list(self, currency: str):
+        locator = self.generate_currency_locator(currency)()
+        self.driver.swipe_until_element_displayed(element_locator=locator)
+        self.driver.click_on(locator)
+
     @allure.step("Execute search")
     def execute_search(self, input_text: str):
         self.driver.click_on(self._SEARCH_BUTTON())
@@ -136,7 +149,11 @@ class OnboardingCurrencyPage(BasePage):
             self.driver.clear_field_and_fill(by_method_with_selector=self._SEARCH_FIELD(),
                                              input_value=input_text)
         with allure.step("Tap on 'Search' button"):
-            self.driver.execute_script("mobile: performEditorAction", {"action": "search"})
+            self.driver.driver.wrapped_driver.execute_script("mobile: performEditorAction", {"action": "search"})
+
+    def get_search_results(self, currency: str) -> list[str]:
+        return self.driver.get_elements_text(
+            by_method_with_selector=self.generate_list_of_currency_locators(currency)())
 
 
 class SelectedCurrencyElement(BasePage):
