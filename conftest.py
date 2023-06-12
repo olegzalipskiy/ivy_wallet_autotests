@@ -1,12 +1,9 @@
 import logging
-import re
 
 import allure
 import pytest
 
 from loguru import logger
-
-from source.config import LOCAL
 
 from support.helpers.drivers.driver_capabilities import DriverCapabilities
 from support.helpers.drivers.mobile_driver import MobileDriverWrapper
